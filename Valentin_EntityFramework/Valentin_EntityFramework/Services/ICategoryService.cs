@@ -7,8 +7,10 @@ namespace Valentin_EntityFramework.Services
     {
         Category GetCategory(string categoryName);
         List<Category> GetCategories();
-        void AddCategory(Category category);
+        List<Category> GetCategoriesWithProducts();
+        Category AddCategory(Category category);
         void DeleteCategoryById(int categoryId);
         Category UpdateCategoryById(int categoryIdToEdit, Category categoryEditValues);
+        //List<Category> GetCategoriesWithPrice();
     }
 }

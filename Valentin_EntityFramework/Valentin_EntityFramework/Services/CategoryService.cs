@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,12 +10,13 @@ namespace Valentin_EntityFramework.Services
 {
     public class CategoryService : ICategoryService
     {
-        public void AddCategory(Category category)
+        public Category AddCategory(Category category)
         {
             using (var db = new ProductDbContext())
             {
                 db.Categories.Add(category);
                 db.SaveChanges();
+                return category;
             }
         }
 
@@ -57,5 +59,23 @@ namespace Valentin_EntityFramework.Services
                 return categoryToEdit;
             }
         }
+
+        public List<Category> GetCategoriesWithProducts()
+        {
+            using (var db = new ProductDbContext())
+            {
+                var listOfCategories = db.Categories.Include(x => x.Products).ToList();
+                return listOfCategories;
+            }
+        }
+
+        //public List<Category> GetCategoriesWithPrice()
+        //{
+        //    using (var db = new ProductDbContext())
+        //    {
+        //        var listOfCategories = db.Categories.Include(x => x.Products).ToList();
+        //        return listOfCategories;
+        //    }
+        //}
     }
 }

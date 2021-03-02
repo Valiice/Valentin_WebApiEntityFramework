@@ -48,7 +48,6 @@ namespace Valentin_EntityFramework.Services
             }
         }
 
-
         public Product UpdateProductById(int productIdToEdit, Product productEditValues)
         {
             using (var db = new ProductDbContext())
@@ -63,7 +62,16 @@ namespace Valentin_EntityFramework.Services
         }
         public int GetTotalPrice()
         {
-            throw new NotImplementedException();
+            using (var db = new ProductDbContext())
+            {
+                var products = db.Products.ToList();
+                var totalPrice = 0;
+                foreach(var product in products)
+                {
+                    totalPrice += product.Price;
+                }
+                return totalPrice;
+            }
         }
     }
 }

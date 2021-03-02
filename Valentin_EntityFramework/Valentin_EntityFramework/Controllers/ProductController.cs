@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Valentin_EntityFramework.Models;
 using Valentin_EntityFramework.Db;
 using Valentin_EntityFramework.Services;
+using Valentin_EntityFramework.DTO;
 
 namespace Valentin_EntityFramework.Controllers
 {
@@ -21,11 +22,28 @@ namespace Valentin_EntityFramework.Controllers
         }
 
         [HttpGet("many products")]
-        public ActionResult<List<Product>> GetAllProducts()
+        public ActionResult<List<ResponseProductWithCategoryDTO>> GetAllProducts()
         {
             var products = _productService.GetProducts();
-            return Ok(products);
+            var listOfResponseProductDTO = new List<ResponseProductWithCategoryDTO>();
+            foreach (var pro in products)
+            {
+                var responseProductDTO = new ResponseProductWithCategoryDTO();
+                responseProductDTO.Id = pro.Id;
+                responseProductDTO.Name = pro.Name;
+                responseProductDTO.HiddenCode = pro.HiddenCode;
+                responseProductDTO.Price = pro.Price;
+                responseProductDTO.CategoryId = pro.CategoryId;
+                responseProductDTO.CategoryName = pro.Category.Name.ToString();
+                listOfResponseProductDTO.Add(responseProductDTO);
+            }
+            return Ok(listOfResponseProductDTO);
         }
+        //public ActionResult<List<Product>> GetAllProducts()
+        //{
+        //    var products = _productService.GetProducts();
+        //    return Ok(products);
+        //}
         [HttpGet("one product")]
         public ActionResult<Product> GetProduct(string productName)
         {
@@ -36,12 +54,29 @@ namespace Valentin_EntityFramework.Controllers
             }
             return Ok(product);
         }
-        [HttpPost]
-        public ActionResult CreateNewProduct(Product newProduct)
+        [HttpGet("total price")]
+        public ActionResult GetTotalPrice()
         {
-            _productService.AddProduct(newProduct);
+            var totalPrice = _productService.GetTotalPrice();
+            return Ok(totalPrice);
+        }
+        [HttpPost]
+        public ActionResult CreateNewProduct(CreateProductDTO createProductDTO)
+        {
+            //var products = _productService.GetProducts();
+            var productToInsertInDB = new Product();
+            productToInsertInDB.Name = createProductDTO.Name;
+            productToInsertInDB.Price = createProductDTO.Price;
+            productToInsertInDB.HiddenCode = createProductDTO.HiddenCode;
+            productToInsertInDB.CategoryId = createProductDTO.CategoryId;
+            _productService.AddProduct(productToInsertInDB);
             return Ok();
         }
+        //public ActionResult CreateNewProduct(Product newProduct)
+        //{
+        //    _productService.AddProduct(newProduct);
+        //    return Ok();
+        //}
         [HttpDelete]
         public ActionResult DeleteHouseById(int productId)
         {

@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Valentin_EntityFramework.Models
+namespace Valentin_EntityFramework.DTO
 {
-    public class Category
+    public class ResponseCategoryDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        
-        public List<Product> Products { get; set; }
     }
 }
